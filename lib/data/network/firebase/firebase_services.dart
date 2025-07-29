@@ -149,85 +149,100 @@ class FirebaseService {
       signInController.setLoading(true);
     }
   }
-  // static Future<void> signInwWithGoogle()async{
-  //   try{
-  //     final GoogleSignIn googleSignIn = GoogleSignIn();
-  //     googleSignIn.signIn().then((GoogleSignInAccount? googleSignInAccount) async {
-  //       if (googleSignInAccount != null) {
-  //         // Get the GoogleSignInAuthentication object
-  //         final GoogleSignInAuthentication googleSignInAuthentication =
-  //         await googleSignInAccount.authentication;
-  //         // Create an AuthCredential object
-  //         final AuthCredential credential = GoogleAuthProvider.credential(
-  //           idToken: googleSignInAuthentication.idToken,
-  //           accessToken: googleSignInAuthentication.accessToken,
-  //         );
 
-  //         await auth.signInWithCredential(credential).then((value) {
-  //           final String str = value.user!.email.toString();
-  //           final String node = str.substring(0, str.indexOf('@'));
-  //           database.ref('Accounts').child(node).set({
-  //             'name' : value.user!.displayName,
-  //             'email' : value.user!.email,
-  //           }).then((val) {
-  //             Utils.showSnackBar(
-  //                 'Login',
-  //                 'Successfully Login',
-  //                 const Icon(
-  //                   FontAwesomeIcons.triangleExclamation,
-  //                   color: Colors.red,
-  //                 ));
-  //             UserPref.setUser(
-  //                 value.user!.displayName!,
-  //                 value.user!.email!,
-  //                 "NOPASSWORD",
-  //                 node,
-  //                 value.user!.uid);
-  //           }).onError((error, stackTrace) {
-  //             Utils.showSnackBar(
-  //                 'Error',
-  //                 Utils.extractFirebaseError(error.toString()),
-  //                 const Icon(
-  //                   FontAwesomeIcons.triangleExclamation,
-  //                   color: Colors.red,
-  //                 ));
-  //             return;
-  //           });
-  //         }).onError((error, stackTrace) {
-  //           Utils.showSnackBar(
-  //               'Error',
-  //               Utils.extractFirebaseError(error.toString()),
-  //               const Icon(
-  //                 FontAwesomeIcons.triangleExclamation,
-  //                 color: Colors.red,
-  //               ));
-  //           return;
-  //         });
-  //       }
-  //     }).onError((error, stackTrace) {
-  //       Utils.showSnackBar(
-  //           'Error',
-  //           Utils.extractFirebaseError(error.toString()),
-  //           const Icon(
-  //             FontAwesomeIcons.triangleExclamation,
-  //             color: Colors.red,
-  //           ));
-  //       return;
-  //     });
-  //   }catch(e){
-  //     Utils.showSnackBar(
-  //         'Error',
-  //         Utils.extractFirebaseError(e.toString()),
-  //         const Icon(
-  //           FontAwesomeIcons.triangleExclamation,
-  //           color: Colors.red,
-  //         ));
-  //   }
-  // }
+  static Future<void> signInwWithGoogle() async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      googleSignIn
+          .signIn()
+          .then((GoogleSignInAccount? googleSignInAccount) async {
+            if (googleSignInAccount != null) {
+              // Get the GoogleSignInAuthentication object
+              final GoogleSignInAuthentication googleSignInAuthentication =
+                  await googleSignInAccount.authentication;
+              // Create an AuthCredential object
+              final AuthCredential credential = GoogleAuthProvider.credential(
+                idToken: googleSignInAuthentication.idToken,
+                accessToken: googleSignInAuthentication.accessToken,
+              );
+
+              await auth
+                  .signInWithCredential(credential)
+                  .then((value) {
+                    final String str = value.user!.email.toString();
+                    final String node = str.substring(0, str.indexOf('@'));
+                    database
+                        .ref('Accounts')
+                        .child(node)
+                        .set({
+                          'name': value.user!.displayName,
+                          'email': value.user!.email,
+                        })
+                        .then((val) {
+                          Utils.showSnackBar(
+                            'Login',
+                            'Successfully Login',
+                            const Icon(
+                              FontAwesomeIcons.triangleExclamation,
+                              color: Colors.red,
+                            ),
+                          );
+                          UserPref.setUser(
+                            value.user!.displayName!,
+                            value.user!.email!,
+                            "NOPASSWORD",
+                            node,
+                            value.user!.uid,
+                          );
+                        })
+                        .onError((error, stackTrace) {
+                          Utils.showSnackBar(
+                            'Error',
+                            Utils.extractFirebaseError(error.toString()),
+                            const Icon(
+                              FontAwesomeIcons.triangleExclamation,
+                              color: Colors.red,
+                            ),
+                          );
+                          return;
+                        });
+                  })
+                  .onError((error, stackTrace) {
+                    Utils.showSnackBar(
+                      'Error',
+                      Utils.extractFirebaseError(error.toString()),
+                      const Icon(
+                        FontAwesomeIcons.triangleExclamation,
+                        color: Colors.red,
+                      ),
+                    );
+                    return;
+                  });
+            }
+          })
+          .onError((error, stackTrace) {
+            Utils.showSnackBar(
+              'Error',
+              Utils.extractFirebaseError(error.toString()),
+              const Icon(
+                FontAwesomeIcons.triangleExclamation,
+                color: Colors.red,
+              ),
+            );
+            return;
+          });
+    } catch (e) {
+      Utils.showSnackBar(
+        'Error',
+        Utils.extractFirebaseError(e.toString()),
+        const Icon(FontAwesomeIcons.triangleExclamation, color: Colors.red),
+      );
+    }
+  }
 
   //  static Future<void> signInWithGoogle() async {
   //   try {
-  //     final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+  //     final GoogleSignIn googleSignIn = GoogleSignIn();
   //     final GoogleSignInAccount? googleUser = await googleSignIn.;
 
   //     if (googleUser == null) {
